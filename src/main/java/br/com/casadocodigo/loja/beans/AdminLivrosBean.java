@@ -25,6 +25,8 @@ public class AdminLivrosBean {
 	private LivroDao dao;
 	@Inject
 	private AutorDao autorDao;
+	@Inject
+	private FacesContext context;
 	
 	private List<Integer> autoresId = new ArrayList<>();
 
@@ -33,10 +35,12 @@ public class AdminLivrosBean {
 	public String salvar() {
 		for (Integer autorId : autoresId) {
 			livro.getAutores().add(new Autor(autorId));
-		}
+		}	
 		dao.salvar(livro);
-		FacesContext.getCurrentInstance()
-			.addMessage(null, new FacesMessage("Livro cadastrado com sucesso!"));
+		
+		context.getExternalContext()
+			.getFlash().setKeepMessages(true);
+		context.addMessage(null, new FacesMessage("Livro cadastrado com sucesso!"));
 		
 		return "/livros/lista?faces-redirect=true";
 	}
