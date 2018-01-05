@@ -31,20 +31,23 @@ public class Livro {
 	private String titulo;
 	
 	@Lob
-    @Length(min=10) // Número mínimo de caracteres que o campo pode ter
-    @NotBlank
+	@Length(min=10)
+	@NotBlank
 	private String descricao;
 	
-	@DecimalMin("20") // Valor decimal mínimo
+	@DecimalMin("20")
 	private BigDecimal preco;
-	
-	@Min(50) // Valor inteiro mínimo
+	@Min(50)
 	private Integer numeroPaginas;
 	
 	@Temporal(TemporalType.DATE)
-	private Calendar dataPublicacao = Calendar.getInstance(); // Pegamos uma instância de Calendar
+	private Calendar dataPublicacao;
+	
+	private String capaPath;
 	
 	@ManyToMany
+	@Size(min=1)
+	@NotNull
 	private List<Autor> autores = new ArrayList<>();
 	
 	public String getTitulo() {
@@ -78,19 +81,31 @@ public class Livro {
 		this.autores = autores;
 	}
 	
+	@Override
+	public String toString() {
+		return "Livro [id=" + id + ", titulo=" + titulo + ", descricao=" + descricao + ", preco=" + preco
+				+ ", numeroPaginas=" + numeroPaginas + ", autores=" + autores + "]";
+	}
 	public Calendar getDataPublicacao() {
 		return dataPublicacao;
 	}
 	public void setDataPublicacao(Calendar dataPublicacao) {
 		this.dataPublicacao = dataPublicacao;
 	}
-	
-	@Override
-	public String toString() {
-	        return "Livro [id=" + id + ", titulo=" + titulo + ", descricao=" + descricao + ", preco=" + preco
-	                        + ", numeroPaginas=" + numeroPaginas + ", autores=" + autores + "]";
+	public String getCapaPath() {
+		return capaPath;
+	}
+	public void setCapaPath(String capaPath) {
+		this.capaPath = capaPath;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
+	
 	
 }
 

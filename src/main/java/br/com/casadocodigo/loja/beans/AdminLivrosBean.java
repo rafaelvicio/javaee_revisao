@@ -1,6 +1,5 @@
 package br.com.casadocodigo.loja.beans;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -8,10 +7,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 
 import br.com.casadocodigo.loja.daos.AutorDao;
 import br.com.casadocodigo.loja.daos.LivroDao;
+import br.com.casadocodigo.loja.infra.FileSaver;
 import br.com.casadocodigo.loja.models.Autor;
 import br.com.casadocodigo.loja.models.Livro;
 
@@ -26,21 +27,21 @@ public class AdminLivrosBean {
 	@Inject
 	private AutorDao autorDao;
 	@Inject
-	private FacesContext context;
+	private FacesContext context; 
 	
-	private List<Integer> autoresId = new ArrayList<>();
-
-
+	private Part capaLivro;
+	
 	@Transactional
 	public String salvar() {
-		for (Integer autorId : autoresId) {
-			livro.getAutores().add(new Autor(autorId));
-		}	
+		FileSaver fileSaver = new FileSaver();
+		String capaPath = fileSaver.write(capaLivro, "livros");
+		livro.setCapaPath(capaPath);
 		dao.salvar(livro);
 		
 		context.getExternalContext()
 			.getFlash().setKeepMessages(true);
-		context.addMessage(null, new FacesMessage("Livro cadastrado com sucesso!"));
+		context
+			.addMessage(null, new FacesMessage("Livro cadastrado com sucesso!"));
 		
 		return "/livros/lista?faces-redirect=true";
 	}
@@ -57,12 +58,12 @@ public class AdminLivrosBean {
 		this.livro = livro;
 	}
 
-	public List<Integer> getAutoresId() {
-		return autoresId;
+	public Part getCapaLivro() {
+		return capaLivro;
 	}
 
-	public void setAutoresId(List<Integer> autoresId) {
-		this.autoresId = autoresId;
+	public void setCapaLivro(Part capaLivro) {
+		this.capaLivro = capaLivro;
 	}
-	
+
 }
